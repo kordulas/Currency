@@ -44,7 +44,8 @@ public class CurrencyService {
         LocalDate startDate = endDate.minusDays(counter);
         String allData = correctURLCreator(checkedCurrency, endDate, startDate,'c');
         List<String> valuesOfBidsAndAsks = getValuesOfBidsAndAsks(allData);
-        return "Major difference :" + valuesOfBidsAndAsks.get(0) + " ," + " minor difference :" + valuesOfBidsAndAsks.get(1);
+        return "Major difference :" + valuesOfBidsAndAsks.get(0) + " ," + " minor difference :" + valuesOfBidsAndAsks.get(1)
+                + " from last : " + counter + " days";
     }
 
     private String getPreparedReturnStatement(String date, String checkedCurrency, LocalDate userDate, DayOfWeek dayOfWeek) {
