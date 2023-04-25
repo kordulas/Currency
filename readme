@@ -1,1 +1,20 @@
-Ulr to use swagger ui : http://localhost:8888/swagger-ui/index.html
+Url to use swagger ui : http://localhost:8888/swagger-ui/index.html
+
+Here are some usage examples :
+
+First endpoint( ) :
+1.
+2.
+3.
+
+Second endpoint( ) :
+1.
+2.
+3.
+
+Third endpoint( ) :
+1.
+2.
+3.
+
+Docker image could be created by clicking and start Dockerfile file.
