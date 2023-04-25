@@ -2,17 +2,17 @@ Url to use swagger ui : http://localhost:8888/swagger-ui/index.html
 
 Here are some usage examples :
 
-First endpoint( ) :
+First endpoint(return average of chosen value in chosen date) :
 1.http://localhost:8888/api/avgrate?currency=thb&date=2023-01-13
 2.http://localhost:8888/api/avgrate?currency=usd&date=2023-04-17
 3.http://localhost:8888/api/avgrate?currency=jpy&date=2022-07-19
 
-Second endpoint( ) :
+Second endpoint(return max and min value of chosen value in range declared by user) :
 1.http://localhost:8888/api/maxminrate?currency=gbp&daysCounter=50
 2.http://localhost:8888/api/maxminrate?currency=usd&daysCounter=100
 3.http://localhost:8888/api/maxminrate?currency=aud&daysCounter=34
 
-Third endpoint( ) :
+Third endpoint(return major difference between buy and ask rate of chosen value in range declared by user) :
 1.http://localhost:8888/api/difference?currency=usd&daysCounter=100
 2.http://localhost:8888/api/difference?currency=czk&daysCounter=65
 3.http://localhost:8888/api/difference?currency=dkk&daysCounter=210
