@@ -1,5 +1,6 @@
 package com.example.Currency.currency;
 
+import com.example.Currency.exception.CounterException;
 import com.example.Currency.exception.WeekendDayException;
 import com.example.Currency.exception.WrongCurrencyName;
 import com.example.Currency.exception.WrongDataException;
@@ -30,22 +31,31 @@ public class CurrencyService {
     }
 
     public String getMaxAndMin(Long counter, String currency) {
+        Long validateCounter = validateCounter(counter);
         String checkedCurrency = validateCurrency(currency);
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(counter);
+        LocalDate startDate = endDate.minusDays(validateCounter);
         String allData = correctURLCreator(checkedCurrency, endDate, startDate, 'a');
         List<String> values = getAllValuesOfCustomerCurrencyByDate(allData);
-        return "For currency : " + checkedCurrency + " " + getMaxAndMinValue(values) + " from last : " + counter + " days";
+        return "For currency : " + checkedCurrency + " " + getMaxAndMinValue(values) + " from last : " + validateCounter + " days";
     }
 
     public String getMajorDifference(Long counter, String currency) {
+        Long validateCounter = validateCounter(counter);
         String checkedCurrency = validateCurrency(currency);
         LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(counter);
+        LocalDate startDate = endDate.minusDays(validateCounter);
         String allData = correctURLCreator(checkedCurrency, endDate, startDate,'c');
         List<String> valuesOfBidsAndAsks = getValuesOfBidsAndAsks(allData);
         return "Major difference :" + valuesOfBidsAndAsks.get(0) + " ," + " minor difference :" + valuesOfBidsAndAsks.get(1)
-                + " from last : " + counter + " days";
+                + " from last : " + validateCounter + " days";
+    }
+
+    private Long validateCounter(Long counter) {
+        if(counter > 255){
+            throw new CounterException("Designated range + " + counter + " is to high, max counter is 255");
+        }
+        else return counter;
     }
 
     private String getPreparedReturnStatement(String date, String checkedCurrency, LocalDate userDate, DayOfWeek dayOfWeek) {
