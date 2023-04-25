@@ -50,14 +50,21 @@ public class CurrencyService {
         return "Major difference :" + valuesOfBidsAndAsks.get(0) + " ," + " minor difference :" + valuesOfBidsAndAsks.get(1)
                 + " from last : " + validateCounter + " days";
     }
-
+    /** Method to check if our counter has correct value
+     * @param counter
+     * @return checked counter if is correct, otherwise throw exception.
+     */
     private Long validateCounter(Long counter) {
         if(counter > 255){
             throw new CounterException("Designated range + " + counter + " is to high, max counter is 255");
         }
         else return counter;
     }
-
+    /** Method which return whole correct statement.
+     * @param date, checkedCurrency, userDate, dayOfWeek
+     * @return prepared and ready to return statement , if there is some error connected with wrong data method will throw
+     * one of defined exception depend on made mistake.
+     */
     private String getPreparedReturnStatement(String date, String checkedCurrency, LocalDate userDate, DayOfWeek dayOfWeek) {
         String mid = "";
         if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
@@ -78,7 +85,10 @@ public class CurrencyService {
         } else
             throw new WeekendDayException("Select a day of the week other than the weekend");
     }
-
+    /** Method to parse introduced date in string to Localdate class format
+     * @param date
+     * @return checked Localdate object, otherwise throw exception.
+     */
     private LocalDate parseStringToDate(String date) {
         LocalDate userDate;
         try {
@@ -88,7 +98,10 @@ public class CurrencyService {
         }
         return userDate;
     }
-
+    /** Method to convert filled url with data chosen by user to list of two string with max and min value.
+     * @param allData
+     * @return list with max and min value for currency chosen by user, if there is problem with data throw exception.
+     */
     private List<String> getValuesOfBidsAndAsks(String allData) {
         Map<String, BigDecimal> values = fillMapWithValues(allData);
         Optional<Map.Entry<String, BigDecimal>> max = values.entrySet().stream()
@@ -100,7 +113,10 @@ public class CurrencyService {
         }else
             throw new WrongDataException("Application couldn't find one of chosen value");
     }
-
+    /** Method to fill necessary Map to further extract
+     * @param allData
+     * @return checked map with correct values, otherwise throw exception.
+     */
     private Map<String, BigDecimal> fillMapWithValues(String allData) {
         Map<String, BigDecimal> values = new HashMap<>();
         try {
@@ -120,7 +136,10 @@ public class CurrencyService {
         }
         return values;
     }
-
+    /** Method to extract values presented later as whole statement.
+     * @param values
+     * @return part of further statement with extracted data.
+     */
     private String getMaxAndMinValue(List<String> values) {
         List<Double> numbers = new ArrayList<>();
         for (String value : values) {
@@ -137,7 +156,10 @@ public class CurrencyService {
                 .orElse(Double.MIN_VALUE);
         return "max value was : " + max + " , min value was : " + min;
     }
-
+    /** Method to get all medium currency values
+     * @param allData
+     * @return list with all medium currency values, if there is mistake with data send by user throw exception.
+     */
     private List<String> getAllValuesOfCustomerCurrencyByDate(String allData) {
         List<String> values = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -153,12 +175,18 @@ public class CurrencyService {
         }
         return values;
     }
-
+    /** Method to build correct url path based on NBP API and fill it with parameters delivered by user
+     * @param currency, endDate, startDate, tabel
+     * @return checked and correct url ready for extracting further data, otherwise false.
+     */
     private String correctURLCreator(String currency, LocalDate endDate, LocalDate startDate, char tabel) {
         return restTemplate.getForObject(URL + "/{tabel}/{currency}/{startDate}/{endDate}/"
                 , String.class, tabel, currency, startDate, endDate);
     }
-
+    /** Method to check introduced currency
+     * @param currency
+     * @return checked currency if is correct, otherwise throw exception.
+     */
     private String validateCurrency(String currency) {
         try {
             Currency checkedCurrency = Currency.getInstance(currency.toUpperCase());
