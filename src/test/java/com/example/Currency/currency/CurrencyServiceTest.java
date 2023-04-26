@@ -12,8 +12,8 @@ class CurrencyServiceTest {
     String wrongDate = "2002-01-1";
     String weekendDay = "2023-04-22";
     String correctDate = "2023-04-25";
-    String wrongCounter = "300";
-    String correctCounter = "200";
+    Long wrongCounter = 300L;
+    Long correctCounter = 200L;
 
     @Test
     void getAvgPriceShouldReturnExceptionWhenCurrencyIsNotCorrect() {
@@ -61,9 +61,69 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void getMaxAndMin() {
+    void getMaxAndMinShouldReturnExceptionWhenCounterIsNotCorrect() {
+        Exception exception = assertThrows(Exception.class, ()
+                -> {
+            currencyService.getMaxAndMin(wrongCounter, correctCurrency);
+        });
+        String expectedMessage = "Designated range + 300 is to high, max counter is 255";
+        String actualMessage = exception.getMessage();
+        //then
+        assertEquals(expectedMessage,actualMessage);
     }
+    @Test
+    void getMaxAndMinShouldReturnExceptionWhenCurrencyIsNotCorrect() {
+        //when
+        Exception exception = assertThrows(Exception.class, ()
+                -> {
+            currencyService.getMaxAndMin(correctCounter, wrongCurrency);
+        });
+        String expectedMessage = "You type incorrectly currency value :"+" " + wrongCurrency.toUpperCase();
+        String actualMessage = exception.getMessage();
+        //then
+        assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
+    void getMaxAndMinShouldReturnCorrectStatementWhenAllDataAreCorrect() {
+        //when
+        String maxAndMin = currencyService.getMaxAndMin(correctCounter, correctCurrency);
+        String expectedMessage = "For currency : USD max value was : 5.0239 , min value was : 4.1557 from last : 200 days";
 
+        //then
+        assertEquals(maxAndMin,expectedMessage);
+    }
+    @Test
+    void getMajorDifferenceShouldReturnExceptionWhenCurrencyIsNotCorrect() {
+        //when
+        Exception exception = assertThrows(Exception.class, ()
+                -> {
+            currencyService.getMajorDifference(correctCounter, wrongCurrency);
+        });
+        String expectedMessage = "You type incorrectly currency value :"+" " + wrongCurrency.toUpperCase();
+        String actualMessage = exception.getMessage();
+        //then
+        assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
+    void getMajorDifferenceShouldReturnExceptionWhenCounterIsNotCorrect() {
+        Exception exception = assertThrows(Exception.class, ()
+                -> {
+            currencyService.getMajorDifference(wrongCounter, correctCurrency);
+        });
+        String expectedMessage = "Designated range + 300 is to high, max counter is 255";
+        String actualMessage = exception.getMessage();
+        //then
+        assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
+    void getMajorDifferenceShouldReturnCorrectStatementWhenAllDataAreCorrect() {
+        //when
+        String majorDifference = currencyService.getMajorDifference(correctCounter, correctCurrency);
+        String expectedMessage = "Major difference :\"2022-10-11\"=0.1004 , minor difference :\"2023-04-25\"=0.0834 from last : 200 days";
+
+        //then
+        assertEquals(majorDifference,expectedMessage);
+    }
     @Test
     void getMajorDifference() {
     }
