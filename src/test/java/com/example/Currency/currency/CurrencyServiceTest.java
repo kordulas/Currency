@@ -10,12 +10,13 @@ class CurrencyServiceTest {
     String wrongCurrency = "us";
     String correctCurrency = "usd";
     String wrongDate = "2002-01-1";
-    String correctDate = "2023-04-26";
+    String weekendDay = "2023-04-22";
+    String correctDate = "2023-04-25";
     String wrongCounter = "300";
     String correctCounter = "200";
 
     @Test
-    void shouldReturnExceptionWhenCurrencyIsNotCorrect() {
+    void getAvgPriceShouldReturnExceptionWhenCurrencyIsNotCorrect() {
         //when
         Exception exception = assertThrows(Exception.class, ()
                 -> {
@@ -27,7 +28,7 @@ class CurrencyServiceTest {
         assertEquals(expectedMessage,actualMessage);
     }
     @Test
-    void shouldReturnExceptionWhenDateIsNotCorrect() {
+    void getAvgPriceShouldReturnExceptionWhenDateIsNotCorrect() {
         //when
         Exception exception = assertThrows(Exception.class, ()
                 -> {
@@ -37,6 +38,26 @@ class CurrencyServiceTest {
         String actualMessage = exception.getMessage();
         //then
         assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
+    void getAvgPriceShouldReturnExceptionWhenDateIsWeekendDay() {
+        //when
+        Exception exception = assertThrows(Exception.class, ()
+                -> {
+            currencyService.getAvgPrice(weekendDay, correctCurrency);
+        });
+        String expectedMessage = "Select a day of the week other than the weekend";
+        String actualMessage = exception.getMessage();
+        //then
+        assertEquals(expectedMessage,actualMessage);
+    }
+    @Test
+    void getAvgPriceShouldReturnPreparedStatementIFValuesAreCorrect() {
+        //when
+        String avgPrice = currencyService.getAvgPrice(correctDate, correctCurrency);
+        String expectedMessage = "For chosen currency :" + correctCurrency.toUpperCase() + ", on day :" + correctDate + ", average exchange rate was :4.1649";
+        //then
+        assertEquals(avgPrice,expectedMessage);
     }
 
     @Test
