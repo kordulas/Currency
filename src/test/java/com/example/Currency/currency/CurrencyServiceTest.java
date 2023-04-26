@@ -124,7 +124,4 @@ class CurrencyServiceTest {
         //then
         assertEquals(majorDifference,expectedMessage);
     }
-    @Test
-    void getMajorDifference() {
-    }
 }
