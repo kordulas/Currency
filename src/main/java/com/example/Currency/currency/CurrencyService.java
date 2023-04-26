@@ -22,6 +22,7 @@ public class CurrencyService {
 
     private final String URL = "http://api.nbp.pl/api/exchangerates/rates";
     private RestTemplate restTemplate = new RestTemplate();
+    private LocalDate todayDate = LocalDate.now();
 
     public String getAvgPrice(String date, String currency) {
         String checkedCurrency = validateCurrency(currency);
@@ -33,9 +34,8 @@ public class CurrencyService {
     public String getMaxAndMin(Long counter, String currency) {
         Long validateCounter = validateCounter(counter);
         String checkedCurrency = validateCurrency(currency);
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(validateCounter);
-        String allData = correctURLCreator(checkedCurrency, endDate, startDate, 'a');
+        LocalDate startDate = todayDate.minusDays(validateCounter);
+        String allData = correctURLCreator(checkedCurrency, todayDate, startDate, 'a');
         List<String> values = getAllValuesOfCustomerCurrencyByDate(allData);
         return "For currency : " + checkedCurrency + " " + getMaxAndMinValue(values) + " from last : " + validateCounter + " days";
     }
@@ -43,9 +43,8 @@ public class CurrencyService {
     public String getMajorDifference(Long counter, String currency) {
         Long validateCounter = validateCounter(counter);
         String checkedCurrency = validateCurrency(currency);
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusDays(validateCounter);
-        String allData = correctURLCreator(checkedCurrency, endDate, startDate,'c');
+        LocalDate startDate = todayDate.minusDays(validateCounter);
+        String allData = correctURLCreator(checkedCurrency, todayDate, startDate,'c');
         List<String> valuesOfBidsAndAsks = getValuesOfBidsAndAsks(allData);
         return "Major difference :" + valuesOfBidsAndAsks.get(0) + " ," + " minor difference :" + valuesOfBidsAndAsks.get(1)
                 + " from last : " + validateCounter + " days";
