@@ -25,10 +25,15 @@ public class CurrencyService {
     private LocalDate todayDate = LocalDate.now();
 
     public String getAvgPrice(String date, String currency) {
+        String mid = "";
         String checkedCurrency = validateCurrency(currency);
         LocalDate userDate = parseStringToDate(date);
         DayOfWeek dayOfWeek = userDate.getDayOfWeek();
-        return getPreparedReturnStatement(date, checkedCurrency, userDate, dayOfWeek);
+        if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
+            mid = getMidValue(checkedCurrency, userDate, mid);
+        }else
+            throw new WeekendDayException("Select a day of the week other than the weekend");
+        return "For chosen currency :" + checkedCurrency + ", on day :" + date + ", average exchange rate was :" + mid;
     }
 
     public String getMaxAndMin(Long counter, String currency) {
@@ -59,31 +64,28 @@ public class CurrencyService {
         }
         else return counter;
     }
-    /** Method which return whole correct statement.
-     * @param date, checkedCurrency, userDate, dayOfWeek
+    /** Method which return average exchange value  .
+     * @param checkedCurrency, userDate, dayOfWeek
      * @return prepared and ready to return statement , if there is some error connected with wrong data method will throw
      * one of defined exception depend on made mistake.
      */
-    private String getPreparedReturnStatement(String date, String checkedCurrency, LocalDate userDate, DayOfWeek dayOfWeek) {
-        String mid = "";
-        if (dayOfWeek != DayOfWeek.SATURDAY && dayOfWeek != DayOfWeek.SUNDAY) {
-            String allData = restTemplate.getForObject(URL + "/a/{checkedCurrency}/{userDate}/"
-                    , String.class, checkedCurrency, userDate);
-            try {
-                ObjectMapper objectMapper = new ObjectMapper();
-                JSONObject jsonObject = new JSONObject(allData);
-                JSONArray records = jsonObject.getJSONArray("rates");
-                JsonNode jsonNode = objectMapper.readTree(records.toString());
-                for (JsonNode node : jsonNode) {
-                    mid = node.findValue("mid").toString();
-                }
-            } catch (Exception e) {
-                throw new WrongDataException("Application couldn't find one of chosen value");
+    private String getMidValue(String checkedCurrency, LocalDate userDate, String mid) {
+        String allData = restTemplate.getForObject(URL + "/a/{checkedCurrency}/{userDate}/"
+                , String.class, checkedCurrency, userDate);
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            JSONObject jsonObject = new JSONObject(allData);
+            JSONArray records = jsonObject.getJSONArray("rates");
+            JsonNode jsonNode = objectMapper.readTree(records.toString());
+            for (JsonNode node : jsonNode) {
+                mid = node.findValue("mid").toString();
             }
-            return "For chosen currency :" + checkedCurrency + ", on day :" + date + ", average exchange rate was :" + mid;
-        } else
-            throw new WeekendDayException("Select a day of the week other than the weekend");
+        } catch (Exception e) {
+            throw new WrongDataException("Application couldn't find one of chosen value");
+        }
+        return mid;
     }
+
     /** Method to parse introduced date in string to Localdate class format
      * @param date
      * @return checked Localdate object, otherwise throw exception.

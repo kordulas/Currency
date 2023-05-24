@@ -87,7 +87,7 @@ class CurrencyServiceTest {
     void getMaxAndMinShouldReturnCorrectStatementWhenAllDataAreCorrect() {
         //when
         String maxAndMin = currencyService.getMaxAndMin(correctCounter, correctCurrency);
-        String expectedMessage = "For currency : USD max value was : 5.0239 , min value was : 4.1557 from last : 200 days";
+        String expectedMessage = "For currency : USD max value was : 4.9905 , min value was : 4.1541 from last : 200 days";
 
         //then
         assertEquals(maxAndMin,expectedMessage);
@@ -119,7 +119,7 @@ class CurrencyServiceTest {
     void getMajorDifferenceShouldReturnCorrectStatementWhenAllDataAreCorrect() {
         //when
         String majorDifference = currencyService.getMajorDifference(correctCounter, correctCurrency);
-        String expectedMessage = "Major difference :\"2022-10-11\"=0.1004 , minor difference :\"2023-04-25\"=0.0834 from last : 200 days";
+        String expectedMessage = "Major difference :\"2022-10-13\"=0.1000 , minor difference :\"2023-04-27\"=0.0826 from last : 200 days";
 
         //then
         assertEquals(majorDifference,expectedMessage);
